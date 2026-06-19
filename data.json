@@ -1,16 +1,25 @@
 {
-  "generated_at": "2026-06-19T16:17:13+00:00",
+  "generated_at": "2026-06-19T21:40:18+00:00",
   "chat_label": "the BHB7 chat",
   "today_date": "2026-06-19",
   "alltime": [
     {
       "player": "Booj",
-      "avg": 933.0,
-      "total": 8397,
-      "days": 9,
+      "avg": 932.4,
+      "total": 9324,
+      "days": 10,
       "best": 973,
       "wins": 6,
       "rank": 1
+    },
+    {
+      "player": "Cole",
+      "avg": 903.0,
+      "total": 4515,
+      "days": 5,
+      "best": 1000,
+      "wins": 1,
+      "rank": 2
     },
     {
       "player": "Johnny",
@@ -18,8 +27,8 @@
       "total": 18847,
       "days": 21,
       "best": 971,
-      "wins": 12,
-      "rank": 2
+      "wins": 11,
+      "rank": 3
     },
     {
       "player": "Dallin",
@@ -28,7 +37,7 @@
       "days": 22,
       "best": 965,
       "wins": 9,
-      "rank": 3
+      "rank": 4
     },
     {
       "player": "Andy",
@@ -37,30 +46,21 @@
       "days": 6,
       "best": 971,
       "wins": 1,
-      "rank": 4
-    },
-    {
-      "player": "Cole",
-      "avg": 875.8,
-      "total": 4379,
-      "days": 5,
-      "best": 944,
-      "wins": 0,
       "rank": 5
     },
     {
       "player": "Tree",
-      "avg": 872.7,
-      "total": 10472,
+      "avg": 876.2,
+      "total": 10515,
       "days": 12,
-      "best": 957,
-      "wins": 1,
+      "best": 1000,
+      "wins": 2,
       "rank": 6
     },
     {
       "player": "Parker",
-      "avg": 849.3,
-      "total": 9342,
+      "avg": 850.2,
+      "total": 9352,
       "days": 11,
       "best": 975,
       "wins": 2,
@@ -69,22 +69,40 @@
   ],
   "today": [
     {
+      "player": "Tree",
+      "avg": 1000.0,
+      "total": 1000,
+      "days": 1,
+      "best": 1000,
+      "wins": 1,
+      "rank": 1
+    },
+    {
+      "player": "Cole",
+      "avg": 1000.0,
+      "total": 1000,
+      "days": 1,
+      "best": 1000,
+      "wins": 1,
+      "rank": 2
+    },
+    {
       "player": "Johnny",
       "avg": 961.0,
       "total": 961,
       "days": 1,
       "best": 961,
-      "wins": 1,
-      "rank": 1
+      "wins": 0,
+      "rank": 3
     },
     {
-      "player": "Tree",
-      "avg": 957.0,
-      "total": 957,
+      "player": "Parker",
+      "avg": 928.0,
+      "total": 928,
       "days": 1,
-      "best": 957,
+      "best": 928,
       "wins": 0,
-      "rank": 2
+      "rank": 4
     },
     {
       "player": "Dallin",
@@ -93,25 +111,16 @@
       "days": 1,
       "best": 927,
       "wins": 0,
-      "rank": 3
-    },
-    {
-      "player": "Parker",
-      "avg": 918.0,
-      "total": 918,
-      "days": 1,
-      "best": 918,
-      "wins": 0,
-      "rank": 4
-    },
-    {
-      "player": "Cole",
-      "avg": 864.0,
-      "total": 864,
-      "days": 1,
-      "best": 864,
-      "wins": 0,
       "rank": 5
+    },
+    {
+      "player": "Booj",
+      "avg": 927.0,
+      "total": 927,
+      "days": 1,
+      "best": 927,
+      "wins": 0,
+      "rank": 6
     }
   ]
 }
