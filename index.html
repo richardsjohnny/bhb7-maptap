@@ -127,7 +127,8 @@
     user-select: none;
     white-space: nowrap;
   }
-  thead th:first-child, thead th:nth-child(2) { text-align: left; }
+  thead th:first-child { text-align: center; }
+  thead th:nth-child(2) { text-align: left; }
   thead th:hover { color: var(--text); }
   thead th[data-active="true"] { color: var(--teal); }
   .caret { opacity: 0; font-size: 9px; margin-left: 4px; }
@@ -142,7 +143,7 @@
     white-space: nowrap;
   }
   tbody tr:last-child td { border-bottom: 0; }
-  td.rank { color: var(--muted); width: 44px; }
+  td.rank { color: var(--muted); width: 52px; text-align: center; vertical-align: middle; }
   td.player {
     text-align: left;
     font-family: "Inter", sans-serif;
@@ -152,14 +153,23 @@
   td.metric.lead { color: var(--text); }
   .muted { color: var(--muted); }
 
-  /* leader treatment — the one bold note */
-  tbody tr.leader { position: relative; }
-  tbody tr.leader td:first-child { box-shadow: inset 3px 0 0 var(--coral); }
-  tbody tr.leader td.player { color: #fff; }
-  .medal {
-    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--coral); margin-right: 9px; vertical-align: middle;
+  /* podium — gold / silver / bronze medals for the top three */
+  tbody tr.p1 { background: linear-gradient(90deg, rgba(233,181,62,0.12), transparent 62%); }
+  tbody tr.p2 { background: linear-gradient(90deg, rgba(198,208,216,0.09), transparent 62%); }
+  tbody tr.p3 { background: linear-gradient(90deg, rgba(203,141,78,0.09), transparent 62%); }
+  tbody tr.p1 td.player { color: #fff; font-weight: 700; }
+
+  td.rank .medal {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 25px; height: 25px; border-radius: 50%;
+    font-family: "Space Mono", monospace; font-weight: 700; font-size: 12px;
+    color: #2c1f06;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.55), 0 1px 3px rgba(0,0,0,0.4);
   }
+  .medal-1 { background: linear-gradient(150deg, #ffe89e 0%, #eab63f 52%, #b07e16 100%); }
+  .medal-2 { background: linear-gradient(150deg, #f7fafc 0%, #cad3db 52%, #97a3ad 100%); }
+  .medal-3 { background: linear-gradient(150deg, #f2c894 0%, #cb8d4e 52%, #8c5a2b 100%); color: #2c1808; }
+
   td.wins b { color: var(--coral); }
 
   .empty, .error {
@@ -203,8 +213,8 @@
 
     <div class="controls">
       <div class="segmented" role="group" aria-label="Time range">
-        <button id="btn-alltime" aria-pressed="true">All-time</button>
-        <button id="btn-today" aria-pressed="false">Today</button>
+        <button id="btn-today" aria-pressed="true">Today</button>
+        <button id="btn-alltime" aria-pressed="false">All-time</button>
       </div>
       <div class="stamp" id="stamp"></div>
     </div>
@@ -253,7 +263,7 @@ const SAMPLE = {
 };
 
 let DATA = null;
-let view = "alltime";
+let view = "today";
 let sortKey = "avg";
 let sortDir = "desc";
 let usingSample = false;
@@ -315,12 +325,15 @@ function render() {
   }
 
   data.forEach((r, i) => {
-    const isLeader = i === 0;
+    const rank = i + 1;
     const tr = document.createElement("tr");
-    if (isLeader) tr.className = "leader";
+    if (rank <= 3) tr.className = "p" + rank;
+    const rankCell = rank <= 3
+      ? `<span class="medal medal-${rank}">${rank}</span>`
+      : rank;
     tr.innerHTML = `
-      <td class="rank">${i + 1}</td>
-      <td class="player">${isLeader ? '<span class="medal"></span>' : ""}${escapeHtml(r.player)}</td>
+      <td class="rank">${rankCell}</td>
+      <td class="player">${escapeHtml(r.player)}</td>
       <td class="metric ${sortKey === "avg" ? "lead" : ""}">${fmt(r.avg)}</td>
       <td class="metric ${sortKey === "total" ? "lead" : ""}">${r.total.toLocaleString()}</td>
       <td class="metric muted">${r.days}</td>
