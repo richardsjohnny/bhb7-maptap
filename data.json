@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-06-19T16:17:13+00:00",
+  "chat_label": "the BHB7 chat",
+  "today_date": "2026-06-19",
+  "alltime": [
+    {
+      "player": "Booj",
+      "avg": 933.0,
+      "total": 8397,
+      "days": 9,
+      "best": 973,
+      "wins": 6,
+      "rank": 1
+    },
+    {
+      "player": "Johnny",
+      "avg": 897.5,
+      "total": 18847,
+      "days": 21,
+      "best": 971,
+      "wins": 12,
+      "rank": 2
+    },
+    {
+      "player": "Dallin",
+      "avg": 886.4,
+      "total": 19500,
+      "days": 22,
+      "best": 965,
+      "wins": 9,
+      "rank": 3
+    },
+    {
+      "player": "Andy",
+      "avg": 876.5,
+      "total": 5259,
+      "days": 6,
+      "best": 971,
+      "wins": 1,
+      "rank": 4
+    },
+    {
+      "player": "Cole",
+      "avg": 875.8,
+      "total": 4379,
+      "days": 5,
+      "best": 944,
+      "wins": 0,
+      "rank": 5
+    },
+    {
+      "player": "Tree",
+      "avg": 872.7,
+      "total": 10472,
+      "days": 12,
+      "best": 957,
+      "wins": 1,
+      "rank": 6
+    },
+    {
+      "player": "Parker",
+      "avg": 849.3,
+      "total": 9342,
+      "days": 11,
+      "best": 975,
+      "wins": 2,
+      "rank": 7
+    }
+  ],
+  "today": [
+    {
+      "player": "Johnny",
+      "avg": 961.0,
+      "total": 961,
+      "days": 1,
+      "best": 961,
+      "wins": 1,
+      "rank": 1
+    },
+    {
+      "player": "Tree",
+      "avg": 957.0,
+      "total": 957,
+      "days": 1,
+      "best": 957,
+      "wins": 0,
+      "rank": 2
+    },
+    {
+      "player": "Dallin",
+      "avg": 927.0,
+      "total": 927,
+      "days": 1,
+      "best": 927,
+      "wins": 0,
+      "rank": 3
+    },
+    {
+      "player": "Parker",
+      "avg": 918.0,
+      "total": 918,
+      "days": 1,
+      "best": 918,
+      "wins": 0,
+      "rank": 4
+    },
+    {
+      "player": "Cole",
+      "avg": 864.0,
+      "total": 864,
+      "days": 1,
+      "best": 864,
+      "wins": 0,
+      "rank": 5
+    }
+  ]
+}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BHB Maptap leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink-0: #081519;
+    --ink-1: #0c232c;
+    --surface: #102e38;
+    --surface-2: #143843;
+    --line: rgba(127, 160, 163, 0.16);
+    --line-strong: rgba(127, 160, 163, 0.32);
+    --text: #eaf3f1;
+    --muted: #82a1a3;
+    --coral: #ff6f5b;
+    --teal: #46c4a9;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #133140 0%, var(--ink-1) 45%, var(--ink-0) 100%);
+    color: var(--text);
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ---------- header / graticule signature ---------- */
+  header {
+    position: relative;
+    padding: 56px 0 28px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .graticule {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+            mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+  }
+  .eyebrow {
+    font-family: "Space Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 0 rgba(70, 196, 169, 0.6);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(70,196,169,.5); }
+    70% { box-shadow: 0 0 0 8px rgba(70,196,169,0); }
+    100% { box-shadow: 0 0 0 0 rgba(70,196,169,0); }
+  }
+  h1 {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 11vw, 76px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin: 14px 0 0;
+  }
+  h1 .map { color: var(--text); }
+  h1 .tap { color: var(--coral); }
+  .sub {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .sub b { color: var(--text); font-weight: 600; }
+
+  /* ---------- toggle ---------- */
+  .controls {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin: 26px 0 10px;
+  }
+  .segmented {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .segmented button {
+    appearance: none; border: 0; cursor: pointer;
+    background: transparent; color: var(--muted);
+    font-family: "Space Mono", monospace;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 8px 16px; border-radius: 999px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--teal); color: var(--ink-0); font-weight: 700; }
+  .stamp {
+    font-family: "Space Mono", monospace;
+    font-size: 11px; color: var(--muted); text-align: right;
+  }
+
+  /* ---------- table ---------- */
+  .board { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; min-width: 540px; }
+  thead th {
+    position: sticky; top: 0;
+    background: var(--surface-2);
+    font-family: "Space Mono", monospace;
+    font-weight: 400; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--line-strong);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th:first-child, thead th:nth-child(2) { text-align: left; }
+  thead th:hover { color: var(--text); }
+  thead th[data-active="true"] { color: var(--teal); }
+  .caret { opacity: 0; font-size: 9px; margin-left: 4px; }
+  thead th[data-active="true"] .caret { opacity: 1; }
+
+  tbody td {
+    padding: 14px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    font-family: "Space Mono", monospace;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.rank { color: var(--muted); width: 44px; }
+  td.player {
+    text-align: left;
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 15px;
+    width: 100%;
+  }
+  td.metric.lead { color: var(--text); }
+  .muted { color: var(--muted); }
+
+  /* leader treatment — the one bold note */
+  tbody tr.leader { position: relative; }
+  tbody tr.leader td:first-child { box-shadow: inset 3px 0 0 var(--coral); }
+  tbody tr.leader td.player { color: #fff; }
+  .medal {
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral); margin-right: 9px; vertical-align: middle;
+  }
+  td.wins b { color: var(--coral); }
+
+  .empty, .error {
+    padding: 48px 20px; text-align: center; color: var(--muted);
+    font-size: 14px; line-height: 1.6;
+  }
+  .empty code {
+    font-family: "Space Mono", monospace; color: var(--teal);
+    background: var(--ink-0); padding: 2px 7px; border-radius: 5px;
+  }
+
+  footer {
+    margin-top: 22px; color: var(--muted); font-size: 12.5px; line-height: 1.6;
+  }
+  footer a { color: var(--teal); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg class="graticule" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M48 0H0V48" fill="none" stroke="rgba(127,160,163,.5)" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+        <ellipse cx="50%" cy="38%" rx="200" ry="200" fill="none" stroke="rgba(70,196,169,.35)" stroke-width="0.75"/>
+        <ellipse cx="50%" cy="38%" rx="120" ry="200" fill="none" stroke="rgba(70,196,169,.25)" stroke-width="0.75"/>
+        <ellipse cx="50%" cy="38%" rx="200" ry="120" fill="none" stroke="rgba(70,196,169,.25)" stroke-width="0.75"/>
+      </svg>
+      <div class="eyebrow"><span class="pulse"></span> live standings · pulled from chat</div>
+      <h1><span class="tap">BHB</span> <span class="map">maptap</span> leaderboard</h1>
+      <div class="sub" id="subline">5 locations a day. closest guesses climb. <b>tap a column to re-rank.</b></div>
+    </header>
+
+    <div class="controls">
+      <div class="segmented" role="group" aria-label="Time range">
+        <button id="btn-alltime" aria-pressed="true">All-time</button>
+        <button id="btn-today" aria-pressed="false">Today</button>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+
+    <div class="board">
+      <table>
+        <thead>
+          <tr id="head"></tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+
+    <footer id="footer"></footer>
+  </div>
+
+<script>
+// Columns: key, label, default sort direction when first clicked.
+const COLS = [
+  { key: "rank",   label: "#",      sortable: false },
+  { key: "player", label: "Player", sortable: true,  dir: "asc",  align: "left" },
+  { key: "avg",    label: "Avg",    sortable: true,  dir: "desc" },
+  { key: "total",  label: "Total",  sortable: true,  dir: "desc" },
+  { key: "days",   label: "Days",   sortable: true,  dir: "desc" },
+  { key: "best",   label: "Best",   sortable: true,  dir: "desc" },
+  { key: "wins",   label: "Wins",   sortable: true,  dir: "desc" },
+];
+
+// Fallback sample so the page renders before you've wired up real data.
+const SAMPLE = {
+  chat_label: "the group chat",
+  today_date: "—",
+  generated_at: null,
+  alltime: [
+    { player: "Noah", avg: 871.4, total: 6100, days: 7, best: 942, wins: 3, rank: 1 },
+    { player: "Sam",  avg: 854.0, total: 5978, days: 7, best: 961, wins: 2, rank: 2 },
+    { player: "Mara", avg: 848.7, total: 5941, days: 7, best: 933, wins: 1, rank: 3 },
+    { player: "Theo", avg: 802.5, total: 4815, days: 6, best: 905, wins: 1, rank: 4 },
+    { player: "Iris", avg: 788.2, total: 5517, days: 7, best: 890, wins: 0, rank: 5 },
+  ],
+  today: [
+    { player: "Sam",  avg: 912, total: 912, days: 1, best: 912, wins: 1, rank: 1 },
+    { player: "Noah", avg: 904, total: 904, days: 1, best: 904, wins: 0, rank: 2 },
+    { player: "Mara", avg: 877, total: 877, days: 1, best: 877, wins: 0, rank: 3 },
+  ],
+};
+
+let DATA = null;
+let view = "alltime";
+let sortKey = "avg";
+let sortDir = "desc";
+let usingSample = false;
+
+const $ = (id) => document.getElementById(id);
+
+function fmt(v) {
+  return typeof v === "number" && !Number.isInteger(v) ? v.toFixed(1) : v;
+}
+
+function rows() {
+  return (DATA[view] || []).slice();
+}
+
+function render() {
+  const head = $("head");
+  head.innerHTML = "";
+  COLS.forEach((c) => {
+    const th = document.createElement("th");
+    th.textContent = c.label;
+    if (c.align === "left") th.style.textAlign = "left";
+    if (c.sortable) {
+      th.dataset.active = (c.key === sortKey).toString();
+      const caret = document.createElement("span");
+      caret.className = "caret";
+      caret.textContent = sortDir === "desc" ? "▼" : "▲";
+      th.appendChild(caret);
+      th.onclick = () => {
+        if (sortKey === c.key) {
+          sortDir = sortDir === "desc" ? "asc" : "desc";
+        } else {
+          sortKey = c.key;
+          sortDir = c.dir;
+        }
+        render();
+      };
+    }
+    head.appendChild(th);
+  });
+
+  const data = rows();
+  data.sort((a, b) => {
+    let x = a[sortKey], y = b[sortKey];
+    if (typeof x === "string") { x = x.toLowerCase(); y = y.toLowerCase(); }
+    const cmp = x < y ? -1 : x > y ? 1 : 0;
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  const body = $("body");
+  body.innerHTML = "";
+
+  if (data.length === 0) {
+    body.innerHTML = `<tr><td colspan="${COLS.length}"><div class="empty">
+      No scores ${view === "today" ? "today yet" : "yet"}.<br>
+      Paste your <code>maptap.gg</code> result in the chat and re-run the script.
+      </div></td></tr>`;
+    paintControls();
+    return;
+  }
+
+  data.forEach((r, i) => {
+    const isLeader = i === 0;
+    const tr = document.createElement("tr");
+    if (isLeader) tr.className = "leader";
+    tr.innerHTML = `
+      <td class="rank">${i + 1}</td>
+      <td class="player">${isLeader ? '<span class="medal"></span>' : ""}${escapeHtml(r.player)}</td>
+      <td class="metric ${sortKey === "avg" ? "lead" : ""}">${fmt(r.avg)}</td>
+      <td class="metric ${sortKey === "total" ? "lead" : ""}">${r.total.toLocaleString()}</td>
+      <td class="metric muted">${r.days}</td>
+      <td class="metric ${sortKey === "best" ? "lead" : ""}">${r.best}</td>
+      <td class="metric wins">${r.wins > 0 ? `<b>${r.wins}</b>` : '<span class="muted">0</span>'}</td>
+    `;
+    body.appendChild(tr);
+  });
+
+  paintControls();
+}
+
+function paintControls() {
+  $("btn-alltime").setAttribute("aria-pressed", (view === "alltime").toString());
+  $("btn-today").setAttribute("aria-pressed", (view === "today").toString());
+
+  const stamp = $("stamp");
+  if (usingSample) {
+    stamp.textContent = "sample data — wire up data.json";
+  } else if (DATA.generated_at) {
+    const d = new Date(DATA.generated_at);
+    stamp.textContent = "updated " + d.toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  } else {
+    stamp.textContent = "";
+  }
+
+  if (view === "today") {
+    $("subline").innerHTML = `today's round · ${escapeHtml(DATA.today_date || "")} <b>· tap a column to re-rank.</b>`;
+  } else {
+    $("subline").innerHTML = `5 locations a day. closest guesses climb. <b>tap a column to re-rank.</b>`;
+  }
+
+  const label = escapeHtml(DATA.chat_label || "the chat");
+  $("footer").innerHTML = usingSample
+    ? `Showing sample data. Run <a href="#">maptap_leaderboard.py</a> on a Mac in the chat to generate real standings.`
+    : `Pulled automatically from <b>${label}</b> · a clone of <a href="https://maptap.gg" target="_blank" rel="noopener">maptap.gg</a> standings for friends.`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+$("btn-alltime").onclick = () => { view = "alltime"; sortKey = "avg"; sortDir = "desc"; render(); };
+$("btn-today").onclick   = () => { view = "today";   sortKey = "avg"; sortDir = "desc"; render(); };
+
+fetch("data.json", { cache: "no-store" })
+  .then((r) => { if (!r.ok) throw new Error("no data.json"); return r.json(); })
+  .then((d) => { DATA = d; usingSample = false; render(); })
+  .catch(() => { DATA = SAMPLE; usingSample = true; render(); });
+</script>
+</body>
+</html>
