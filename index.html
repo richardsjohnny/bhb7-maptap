@@ -264,7 +264,7 @@ const SAMPLE = {
 
 let DATA = null;
 let view = "today";
-let sortKey = "avg";
+let sortKey = "best";
 let sortDir = "desc";
 let usingSample = false;
 
@@ -278,10 +278,15 @@ function rows() {
   return (DATA[view] || []).slice();
 }
 
+function visibleCols() {
+  // On the Today tab, Avg equals the day's single score, so hide it.
+  return COLS.filter((c) => !(view === "today" && c.key === "avg"));
+}
+
 function render() {
   const head = $("head");
   head.innerHTML = "";
-  COLS.forEach((c) => {
+  visibleCols().forEach((c) => {
     const th = document.createElement("th");
     th.textContent = c.label;
     if (c.align === "left") th.style.textAlign = "left";
@@ -316,7 +321,7 @@ function render() {
   body.innerHTML = "";
 
   if (data.length === 0) {
-    body.innerHTML = `<tr><td colspan="${COLS.length}"><div class="empty">
+    body.innerHTML = `<tr><td colspan="${visibleCols().length}"><div class="empty">
       No scores ${view === "today" ? "today yet" : "yet"}.<br>
       Paste your <code>maptap.gg</code> result in the chat and re-run the script.
       </div></td></tr>`;
@@ -331,10 +336,13 @@ function render() {
     const rankCell = rank <= 3
       ? `<span class="medal medal-${rank}">${rank}</span>`
       : rank;
+    const avgCell = view === "today"
+      ? ""
+      : `<td class="metric ${sortKey === "avg" ? "lead" : ""}">${fmt(r.avg)}</td>`;
     tr.innerHTML = `
       <td class="rank">${rankCell}</td>
       <td class="player">${escapeHtml(r.player)}</td>
-      <td class="metric ${sortKey === "avg" ? "lead" : ""}">${fmt(r.avg)}</td>
+      ${avgCell}
       <td class="metric ${sortKey === "total" ? "lead" : ""}">${r.total.toLocaleString()}</td>
       <td class="metric muted">${r.days}</td>
       <td class="metric ${sortKey === "best" ? "lead" : ""}">${r.best}</td>
@@ -377,8 +385,8 @@ function escapeHtml(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-$("btn-alltime").onclick = () => { view = "alltime"; sortKey = "avg"; sortDir = "desc"; render(); };
-$("btn-today").onclick   = () => { view = "today";   sortKey = "avg"; sortDir = "desc"; render(); };
+$("btn-alltime").onclick = () => { view = "alltime"; sortKey = "wins"; sortDir = "desc"; render(); };
+$("btn-today").onclick   = () => { view = "today";   sortKey = "best"; sortDir = "desc"; render(); };
 
 fetch("data.json", { cache: "no-store" })
   .then((r) => { if (!r.ok) throw new Error("no data.json"); return r.json(); })
